@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: {{module.name}}_postgres
+    environment:
+      POSTGRES_DB: {{module.name}}-db
+      POSTGRES_USER: {{module.name}}-user
+      POSTGRES_PASSWORD: {{module.name}}-pwd
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U {{module.name}}-user -d {{module.name}}-db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+    driver: local

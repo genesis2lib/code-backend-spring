@@ -1,0 +1,80 @@
+{
+  "version": "1.0.0",
+  "metadata": {
+    "name": "code-backend-spring",
+    "kind": "code",
+    "layer": "backend",
+    "type": "spring",
+    "description": "Spring Boot backend application with PostgreSQL, Auth0, and Liquibase",
+    "author": "Genesis2 Code Generator",
+    "tags": [
+      "spring-boot",
+      "java",
+      "postgresql",
+      "liquibase",
+      "auth0",
+      "gradle",
+      "backend",
+      "rest-api"
+    ],
+    "documentation": "https://docs.example.com/code-backend-spring"
+  },
+  "requirements": {
+    "runtime": {
+      "java": "17"
+    },
+    "build": {
+      "gradle": ">=7.0.0"
+    },
+    "compatibility": {
+      "os": [
+        "linux",
+        "darwin",
+        "windows"
+      ],
+      "arch": [
+        "x64",
+        "arm64"
+      ]
+    }
+  },
+  "generation": {
+    "baseTemplate": {
+      "source": "spring-initializr",
+      "config": {
+        "template": "spring-boot",
+        "framework": "spring-boot",
+        "java": "21",
+        "build": "gradle"
+      }
+    },
+    "directories": {
+      "create": [
+        "src/main/java",
+        "src/main/resources/db/changelog/changes",
+        "src/test/java"
+      ],
+      "remove": [],
+      "rename": []
+    },
+    "files": {
+      "remove": [],
+      "rename": [],
+      "chmod": [
+        {
+          "path": "gradlew",
+          "mode": "755"
+        },
+        {
+          "path": "start-local-db.sh", 
+          "mode": "755"
+        }
+      ]
+    },
+    "dependencies": {},
+    "transformations": {
+      "replacements": [],
+      "jsonMerge": []
+    }
+  }
+}
