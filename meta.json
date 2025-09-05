@@ -17,7 +17,7 @@
       "backend",
       "rest-api"
     ],
-    "documentation": "https://docs.example.com/code-backend-spring"
+    "documentation": "https://g.rathnas.com/lib-docs/code-backend-spring"
   },
   "requirements": {
     "runtime": {
