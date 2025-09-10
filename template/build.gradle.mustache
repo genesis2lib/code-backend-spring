@@ -52,3 +52,8 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// Configure main class for Spring Boot
+springBoot {
+	mainClass = '{{javaPackageFull}}.{{projectNameCapitalized}}Application'
+}
