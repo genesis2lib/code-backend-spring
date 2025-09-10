@@ -33,7 +33,7 @@ public enum UserRole {
         throw new IllegalArgumentException("Invalid UserRole value: " + value);
     }
     
-    @Converter(autoApply = true)
+    @jakarta.persistence.Converter(autoApply = true)
     public static class Converter implements AttributeConverter<List<UserRole>, String> {
         
         private static final String DELIMITER = ",";
