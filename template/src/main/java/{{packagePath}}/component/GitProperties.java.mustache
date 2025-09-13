@@ -1,0 +1,21 @@
+package {{javaPackageFull}}.component;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import lombok.Data;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+
+@Data
+@Component
+@ConfigurationProperties(prefix = "gh")
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class GitProperties {
+    private String build;
+    private String attempt;
+    private String action;
+    private String modifiedDate;
+    private String sha;
+}
