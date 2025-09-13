@@ -1,6 +1,6 @@
 package {{javaPackageFull}}.controller.app;
 
-import {{javaPackageFull}}.service.GitProperties;
+import {{javaPackageFull}}.component.VersionProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 public class HealthController {
 
-    private final GitProperties gitProperties;
+    private final VersionProperties versionProperties;
 
     @GetMapping("/health")
     public ResponseEntity<Map<String, Object>> health() {
@@ -24,7 +24,7 @@ public class HealthController {
         response.put("status", "UP");
         response.put("timestamp", LocalDateTime.now());
         response.put("service", "{{module.name}}-api");
-        response.put("version", gitProperties);
+        response.put("version", versionProperties);
         return ResponseEntity.ok(response);
     }
 }
