@@ -83,7 +83,7 @@
             },
             {
               "find": "dependencies {",
-              "replace": "dependencies {\n\t// Additional dependencies (not available in Spring Initializr)\n\timplementation 'com.google.guava:guava:33.4.0-jre'\n\timplementation 'org.apache.commons:commons-lang3:3.18.0'\n\timplementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4'\n"
+              "replace": "dependencies {\n\t// Genesis2 Recomended dependencies - Begin\n\timplementation 'com.google.guava:guava:33.4.0-jre'\n\timplementation 'org.apache.commons:commons-lang3:3.18.0'\n\timplementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4'\n\t// Genesis2 recomended dependencies - End\n\n\t"
             }
           ]
         }
