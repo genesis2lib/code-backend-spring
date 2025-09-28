@@ -94,6 +94,88 @@ services:
       retries: 5
 {{/isRedis}}
 
+{{#isElasticsearch}}
+  elasticsearch:
+    image: elasticsearch:8.11.0
+    container_name: {{module.name}}_elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200/_cluster/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+{{/isElasticsearch}}
+
+{{#isCassandra}}
+  cassandra:
+    image: cassandra:4.1
+    container_name: {{module.name}}_cassandra
+    environment:
+      - CASSANDRA_CLUSTER_NAME={{module.name}}-cluster
+      - CASSANDRA_DC={{module.name}}-dc
+      - CASSANDRA_RACK={{module.name}}-rack
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra_data:/var/lib/cassandra
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "describe keyspaces"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+{{/isCassandra}}
+
+{{#isCouchbase}}
+  couchbase:
+    image: couchbase/server:7.2.0
+    container_name: {{module.name}}_couchbase
+    environment:
+      - COUCHBASE_ADMINISTRATOR_USERNAME={{module.name}}-admin
+      - COUCHBASE_ADMINISTRATOR_PASSWORD={{module.name}}-pwd
+    ports:
+      - "8091:8091"
+      - "8092:8092"
+      - "8093:8093"
+      - "8094:8094"
+      - "8095:8095"
+      - "8096:8096"
+    volumes:
+      - couchbase_data:/opt/couchbase/var
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8091/pools/default"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+{{/isCouchbase}}
+
+{{#isNeo4j}}
+  neo4j:
+    image: neo4j:5.15
+    container_name: {{module.name}}_neo4j
+    environment:
+      - NEO4J_AUTH={{module.name}}-user/{{module.name}}-pwd
+      - NEO4J_PLUGINS=["apoc"]
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "{{module.name}}-user", "-p", "{{module.name}}-pwd", "RETURN 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+{{/isNeo4j}}
+
 volumes:
 {{#isPostgreSQL}}
   postgres_data:
@@ -115,3 +197,21 @@ volumes:
   redis_data:
     driver: local
 {{/isRedis}}
+{{#isElasticsearch}}
+  elasticsearch_data:
+    driver: local
+{{/isElasticsearch}}
+{{#isCassandra}}
+  cassandra_data:
+    driver: local
+{{/isCassandra}}
+{{#isCouchbase}}
+  couchbase_data:
+    driver: local
+{{/isCouchbase}}
+{{#isNeo4j}}
+  neo4j_data:
+    driver: local
+  neo4j_logs:
+    driver: local
+{{/isNeo4j}}
