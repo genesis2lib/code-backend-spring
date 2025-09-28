@@ -1,16 +1,20 @@
 package {{javaPackageFull}}.config;
 
+{{#isPostgreSQL}}
 import liquibase.integration.spring.SpringLiquibase;
+{{/isPostgreSQL}}
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+{{#isPostgreSQL}}
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+{{/isPostgreSQL}}
 
 @Slf4j
 @Configuration
@@ -25,6 +29,7 @@ public class DatabaseConfig {
     @Value("${spring.datasource.password}")
     private String password;
 
+    {{#isPostgreSQL}}
     @Value("${spring.liquibase.default-schema}")
     private String schema;
 
@@ -90,4 +95,45 @@ public class DatabaseConfig {
             throw new RuntimeException("Failed to create schema: " + schema, e);
         }
     }
+    {{/isPostgreSQL}}
+
+    {{#isMySQL}}
+    @Bean
+    public String databaseInfo() {
+        log.info("MySQL database configuration initialized");
+        log.info("Database URL: {}", jdbcUrl);
+        log.info("Username: {}", username);
+        return "MySQL database configured successfully";
+    }
+    {{/isMySQL}}
+
+    {{#isMariaDB}}
+    @Bean
+    public String databaseInfo() {
+        log.info("MariaDB database configuration initialized");
+        log.info("Database URL: {}", jdbcUrl);
+        log.info("Username: {}", username);
+        return "MariaDB database configured successfully";
+    }
+    {{/isMariaDB}}
+
+    {{#isMongoDB}}
+    @Bean
+    public String databaseInfo() {
+        log.info("MongoDB database configuration initialized");
+        log.info("Database URL: {}", jdbcUrl);
+        log.info("Username: {}", username);
+        return "MongoDB database configured successfully";
+    }
+    {{/isMongoDB}}
+
+    {{#isRedis}}
+    @Bean
+    public String databaseInfo() {
+        log.info("Redis database configuration initialized");
+        log.info("Database URL: {}", jdbcUrl);
+        log.info("Username: {}", username);
+        return "Redis database configured successfully";
+    }
+    {{/isRedis}}
 }

@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+{{#isPostgreSQL}}
   postgres:
     image: postgres:17-alpine
     container_name: {{module.name}}_postgres
@@ -17,7 +18,100 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+{{/isPostgreSQL}}
+
+{{#isMySQL}}
+  mysql:
+    image: mysql:8.0
+    container_name: {{module.name}}_mysql
+    environment:
+      MYSQL_DATABASE: {{module.name}}-db
+      MYSQL_USER: {{module.name}}-user
+      MYSQL_PASSWORD: {{module.name}}-pwd
+      MYSQL_ROOT_PASSWORD: {{module.name}}-root-pwd
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "{{module.name}}-user", "-p{{module.name}}-pwd"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+{{/isMySQL}}
+
+{{#isMariaDB}}
+  mariadb:
+    image: mariadb:10.11
+    container_name: {{module.name}}_mariadb
+    environment:
+      MARIADB_DATABASE: {{module.name}}-db
+      MARIADB_USER: {{module.name}}-user
+      MARIADB_PASSWORD: {{module.name}}-pwd
+      MARIADB_ROOT_PASSWORD: {{module.name}}-root-pwd
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "{{module.name}}-user", "-p{{module.name}}-pwd"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+{{/isMariaDB}}
+
+{{#isMongoDB}}
+  mongodb:
+    image: mongo:7.0
+    container_name: {{module.name}}_mongodb
+    environment:
+      MONGO_INITDB_DATABASE: {{module.name}}-db
+      MONGO_INITDB_ROOT_USERNAME: {{module.name}}-user
+      MONGO_INITDB_ROOT_PASSWORD: {{module.name}}-pwd
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+{{/isMongoDB}}
+
+{{#isRedis}}
+  redis:
+    image: redis:7.2-alpine
+    container_name: {{module.name}}_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+{{/isRedis}}
 
 volumes:
+{{#isPostgreSQL}}
   postgres_data:
     driver: local
+{{/isPostgreSQL}}
+{{#isMySQL}}
+  mysql_data:
+    driver: local
+{{/isMySQL}}
+{{#isMariaDB}}
+  mariadb_data:
+    driver: local
+{{/isMariaDB}}
+{{#isMongoDB}}
+  mongodb_data:
+    driver: local
+{{/isMongoDB}}
+{{#isRedis}}
+  redis_data:
+    driver: local
+{{/isRedis}}

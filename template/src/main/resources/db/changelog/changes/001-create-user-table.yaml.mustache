@@ -1,3 +1,4 @@
+{{#isPostgreSQL}}
 databaseChangeLog:
   - changeSet:
       id: 001-create-{{module.name}}-user-table
@@ -127,3 +128,260 @@ databaseChangeLog:
         - dropIndex:
             indexName: idx_{{module.name}}_user_deleted
             schemaName: {{module.name}}
+{{/isPostgreSQL}}
+
+{{#isMySQL}}
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-{{module.name}}-user-table
+      author: system
+      comment: Create {{module.name}} user table with default and user-specific fields
+      changes:
+        - createTable:
+            tableName: {{module.name}}_user
+            columns:
+              # Default system fields
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_{{module.name}}_user_id
+              - column:
+                  name: deleted
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: delete_reason
+                  type: text
+              - column:
+                  name: tenant_id
+                  type: varchar(255)
+              - column:
+                  name: created_at
+                  type: bigint
+                  defaultValueComputed: "UNIX_TIMESTAMP(NOW()) * 1000"
+              - column:
+                  name: modified_at
+                  type: bigint
+                  defaultValueComputed: "UNIX_TIMESTAMP(NOW()) * 1000"
+              - column:
+                  name: created_by
+                  type: varchar(255)
+              - column:
+                  name: modified_by
+                  type: varchar(255)
+              - column:
+                  name: slug
+                  type: varchar(255)
+                  defaultValueComputed: "UUID()"
+                  constraints:
+                    nullable: false
+                    unique: true
+              # User-specific fields
+              - column:
+                  name: external_auth_provider
+                  type: varchar(255)
+              - column:
+                  name: external_auth_id
+                  type: varchar(255)
+              - column:
+                  name: picture
+                  type: text
+              - column:
+                  name: email
+                  type: varchar(255)
+              - column:
+                  name: first_name
+                  type: varchar(255)
+              - column:
+                  name: last_name
+                  type: varchar(255)
+              - column:
+                  name: full_name
+                  type: varchar(255)
+              - column:
+                  name: roles
+                  type: text
+                  remarks: "Comma-separated list of roles for RBAC"
+      rollback:
+        - dropTable:
+            tableName: {{module.name}}_user
+
+  - changeSet:
+      id: 002-create-{{module.name}}-user-indexes
+      author: system
+      comment: Create indexes for {{module.name}} user table
+      changes:
+        - createIndex:
+            indexName: idx_{{module.name}}_user_email
+            tableName: {{module.name}}_user
+            columns:
+              - column:
+                  name: email
+        - createIndex:
+            indexName: idx_{{module.name}}_user_external_auth
+            tableName: {{module.name}}_user
+            columns:
+              - column:
+                  name: external_auth_provider
+              - column:
+                  name: external_auth_id
+        - createIndex:
+            indexName: idx_{{module.name}}_user_tenant
+            tableName: {{module.name}}_user
+            columns:
+              - column:
+                  name: tenant_id
+        - createIndex:
+            indexName: idx_{{module.name}}_user_deleted
+            tableName: {{module.name}}_user
+            columns:
+              - column:
+                  name: deleted
+      rollback:
+        - dropIndex:
+            indexName: idx_{{module.name}}_user_email
+        - dropIndex:
+            indexName: idx_{{module.name}}_user_external_auth
+        - dropIndex:
+            indexName: idx_{{module.name}}_user_tenant
+        - dropIndex:
+            indexName: idx_{{module.name}}_user_deleted
+{{/isMySQL}}
+
+{{#isMariaDB}}
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-{{module.name}}-user-table
+      author: system
+      comment: Create {{module.name}} user table with default and user-specific fields
+      changes:
+        - createTable:
+            tableName: {{module.name}}_user
+            columns:
+              # Default system fields
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_{{module.name}}_user_id
+              - column:
+                  name: deleted
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: delete_reason
+                  type: text
+              - column:
+                  name: tenant_id
+                  type: varchar(255)
+              - column:
+                  name: created_at
+                  type: bigint
+                  defaultValueComputed: "UNIX_TIMESTAMP(NOW()) * 1000"
+              - column:
+                  name: modified_at
+                  type: bigint
+                  defaultValueComputed: "UNIX_TIMESTAMP(NOW()) * 1000"
+              - column:
+                  name: created_by
+                  type: varchar(255)
+              - column:
+                  name: modified_by
+                  type: varchar(255)
+              - column:
+                  name: slug
+                  type: varchar(255)
+                  defaultValueComputed: "UUID()"
+                  constraints:
+                    nullable: false
+                    unique: true
+              # User-specific fields
+              - column:
+                  name: external_auth_provider
+                  type: varchar(255)
+              - column:
+                  name: external_auth_id
+                  type: varchar(255)
+              - column:
+                  name: picture
+                  type: text
+              - column:
+                  name: email
+                  type: varchar(255)
+              - column:
+                  name: first_name
+                  type: varchar(255)
+              - column:
+                  name: last_name
+                  type: varchar(255)
+              - column:
+                  name: full_name
+                  type: varchar(255)
+              - column:
+                  name: roles
+                  type: text
+                  remarks: "Comma-separated list of roles for RBAC"
+      rollback:
+        - dropTable:
+            tableName: {{module.name}}_user
+
+  - changeSet:
+      id: 002-create-{{module.name}}-user-indexes
+      author: system
+      comment: Create indexes for {{module.name}} user table
+      changes:
+        - createIndex:
+            indexName: idx_{{module.name}}_user_email
+            tableName: {{module.name}}_user
+            columns:
+              - column:
+                  name: email
+        - createIndex:
+            indexName: idx_{{module.name}}_user_external_auth
+            tableName: {{module.name}}_user
+            columns:
+              - column:
+                  name: external_auth_provider
+              - column:
+                  name: external_auth_id
+        - createIndex:
+            indexName: idx_{{module.name}}_user_tenant
+            tableName: {{module.name}}_user
+            columns:
+              - column:
+                  name: tenant_id
+        - createIndex:
+            indexName: idx_{{module.name}}_user_deleted
+            tableName: {{module.name}}_user
+            columns:
+              - column:
+                  name: deleted
+      rollback:
+        - dropIndex:
+            indexName: idx_{{module.name}}_user_email
+        - dropIndex:
+            indexName: idx_{{module.name}}_user_external_auth
+        - dropIndex:
+            indexName: idx_{{module.name}}_user_tenant
+        - dropIndex:
+            indexName: idx_{{module.name}}_user_deleted
+{{/isMariaDB}}
+
+{{#isMongoDB}}
+# MongoDB doesn't use Liquibase migrations
+# Collections are created automatically when first document is inserted
+# This file is kept for consistency but won't be processed
+{{/isMongoDB}}
+
+{{#isRedis}}
+# Redis doesn't use database migrations
+# Data structures are created on-demand
+# This file is kept for consistency but won't be processed
+{{/isRedis}}
