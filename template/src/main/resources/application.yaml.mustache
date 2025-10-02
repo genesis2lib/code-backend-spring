@@ -14,6 +14,24 @@ app:
 spring:
   application:
     name: {{module.name}}-api
+  {{#needRelationalDatabase}}
+  datasource:
+    url: ${SPRING_ENV_DATASOURCE_URL:jdbc:postgresql://localhost:5432/{{module.name}}}
+    username: ${SPRING_ENV_DATASOURCE_USERNAME:{{module.name}}}
+    password: ${SPRING_ENV_DATASOURCE_PASSWORD:password}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+  {{/needRelationalDatabase}}
 
 springdoc:
   swagger-ui:
@@ -31,3 +49,7 @@ logging:
   level:
     {{javaPackageFull}}: INFO
     org.springframework: INFO
+    {{#needRelationalDatabase}}
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    {{/needRelationalDatabase}}

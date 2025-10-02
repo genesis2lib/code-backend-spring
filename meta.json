@@ -58,7 +58,9 @@
       "rename": []
     },
     "files": {
-      "remove": [],
+      "remove": [
+        "src/main/resources/application.properties"
+      ],
       "rename": [],
       "chmod": [
         {
@@ -72,6 +74,30 @@
       ]
     },
     "dependencies": {},
+    "conditionalFiles": {
+      "jpa": {
+        "condition": "needRelationalDatabase",
+        "files": [
+          "src/main/java/{{packagePath}}/jpa/entity/BaseEntity.java",
+          "src/main/java/{{packagePath}}/jpa/entity/UserEntity.java",
+          "src/main/java/{{packagePath}}/jpa/enumtype/UserRole.java",
+          "src/main/java/{{packagePath}}/jpa/repository/UserRepository.java",
+          "src/main/java/{{packagePath}}/model/User.java",
+          "src/main/java/{{packagePath}}/service/UserService.java",
+          "src/main/java/{{packagePath}}/controller/api/UserController.java",
+          "src/main/java/{{packagePath}}/controller/admin/AdminController.java",
+          "src/main/java/{{packagePath}}/config/DatabaseConfig.java"
+        ]
+      },
+      "security": {
+        "condition": "needSecurity",
+        "files": [
+          "src/main/java/{{packagePath}}/config/AuthToken.java",
+          "src/main/java/{{packagePath}}/config/SecurityConfig.java",
+          "src/main/java/{{packagePath}}/controller/api/ProtectedController.java"
+        ]
+      }
+    },
     "transformations": {
       "replacements": [
         {
