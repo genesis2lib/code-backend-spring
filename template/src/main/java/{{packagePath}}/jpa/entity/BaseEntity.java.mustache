@@ -4,9 +4,11 @@ import {{javaPackageFull}}.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+{{#needSecurity}}
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+{{/needSecurity}}
 
 @Data
 @SuperBuilder
@@ -69,6 +71,7 @@ public abstract class BaseEntity {
         modifiedBy = getLoggedUser();
     }
 
+    {{#needSecurity}}
     private String getLoggedUser() {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -86,4 +89,10 @@ public abstract class BaseEntity {
             return "~";
         }
     }
+    {{/needSecurity}}
+    {{^needSecurity}}
+    private String getLoggedUser() {
+        return "system";
+    }
+    {{/needSecurity}}
 }
