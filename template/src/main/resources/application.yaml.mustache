@@ -1,5 +1,5 @@
 app:
-  users: 
+  users:
     root: {{rootUser}}
     admins: {{adminUsers}}
   datasource:
@@ -10,6 +10,21 @@ app:
     host: {{module.name}}-api.{{project.domain}}
   uris:
     public: "/,/app/**,/public/**,/pub/**,/v3/api-docs/**,/swagger-ui/**,/index.html,/error,/favicon.ico"
+  {{#hasAuth0Config}}
+  auth0:
+    domain: ${AUTH0_DOMAIN:}
+    audience: ${AUTH0_AUDIENCE:}
+    jwt:
+      role:
+        claim:
+          key: ${AUTH0_ROLE_CLAIM:https://{{module.name}}-api.{{project.domain}}.com/roles}
+  {{/hasAuth0Config}}
+  {{#hasOktaConfig}}
+  okta:
+    domain: ${OKTA_DOMAIN:}
+    client-id: ${OKTA_CLIENT_ID:}
+    issuer: ${OKTA_ISSUER:}
+  {{/hasOktaConfig}}
 
 spring:
   application:
